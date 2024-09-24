@@ -1,24 +1,15 @@
-from gsorter.group import Folder
 # Project defines the interface for adding data
-
-# add_data(filesystem_path) returns a List of Folder
-# Folder.files() returns a List of File
-# File.fields() returns a List of Field
 
 from dataclasses import dataclass
 from typing import Callable
-from group import Folder
+from gsorter.group import Grouper, Group
+from pydantic import BaseModel, Field
 
-# Should this be a dataclass?
-@dataclass
-class ProjectSpec:
-    add_data: Callable[list[str],Group]
+class Project(BaseModel):
+    name : str = ''
+    groups : list[Group] = Field(default_factory=lambda:[])
+    userdata : dict = Field(default_factory=lambda: {})
 
-class Project:
-    def __init__(self, spec):
-        self.spec = spec
-        self._groups = []
-        self.active_group = None
-
-    def add_data(self, file_paths : list[str]):
-        self._groups.append(spec.add_data(file_paths))
+    def load_from_path(file_path):
+        with open(file_path, encoding='utf-8') as f:
+            self.model_validate_json(f.read())

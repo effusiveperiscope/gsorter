@@ -1,17 +1,8 @@
-from typing import Union, Callable
-from dataclasses import dataclass
+from pydantic import BaseModel, Field
 from PyQt5.QtGui import (QIntValidator, QDoubleValidator)
 
-@dataclass
-class FieldSpec:
-    name: str,
-    field_type: type,
-    validator: Union[
-        QIntValidator,
-        QDoubleValidator, 
-        Callable[..., bool]]
-
-@dataclass
-class FieldFill:
-    name: str,
-    values: list
+class FieldSpec(BaseModel):
+    field_type: str
+    optional: bool = False
+    editable: bool = True
+    flags: dict = Field(default_factory=lambda:{})
