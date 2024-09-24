@@ -17,6 +17,7 @@ class ItemGridField(QWidget):
         else:
             widget = QLineEdit(str(value))
             self.gettext = widget.text
+        widget.setEnabled(self.field_spec.editable)
         layout.addWidget(widget)
 
         widget.textChanged.connect(self.textChangedCallback)
