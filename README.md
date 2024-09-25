@@ -1,7 +1,7 @@
 # GSorter
 GSorter is a UI/framework written in PyQt5 for local
 hand-annotation and hand-sorting tasks. It is primarily focused on picking top1
-from alternatives.
+from alternatives. See `horsewords.py` for example usage.
 
 # Conceptual model
 Data in GSorter is structured in the following hierarchy:
