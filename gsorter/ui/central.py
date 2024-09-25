@@ -23,7 +23,8 @@ class CentralWidget(QFrame):
         item_grid = ItemGrid(sorter, fields)
         layout.addWidget(item_grid)
         
-        item_grid.change_made.connect(self.countAction)
+        item_grid.change_made.connect(self.changeHook)
+        self.item_grid = item_grid
 
         rl_box = QGroupBox("Comparisons")
         rl_layout = QHBoxLayout(rl_box)
@@ -45,7 +46,8 @@ class CentralWidget(QFrame):
 
         self._sorter = sorter
 
-    def countAction(self, score : int):
+    def changeHook(self, score : int):
+        self._sorter.dirty_flag = True
         self.actions_count += score
         cfg = self._sorter.config
         if cfg['make_backups'] and (self.actions_count > cfg['backup_threshold']):

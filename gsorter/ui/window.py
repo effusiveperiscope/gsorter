@@ -7,7 +7,10 @@ class MainWindow(QMainWindow):
         self._sorter = sorter
         project = sorter.project
         self.updateTitle()
-        self.setCentralWidget(CentralWidget(sorter))
+        central_widget = CentralWidget(sorter)
+        central_widget.item_grid.change_made.connect(lambda score:
+            self.updateTitle())
+        self.setCentralWidget(central_widget)
 
         menu_bar = self.menuBar()
         file_menu = menu_bar.addMenu(QIcon(), 'File')
@@ -36,6 +39,8 @@ class MainWindow(QMainWindow):
             title = 'gsorter'
         if 'primary_save_path' in project.userdata:
             title += f' ({project.userdata["primary_save_path"]})'
+        if self._sorter.dirty_flag:
+            title += '*'
         self.setWindowTitle(title)
 
     def updateProject(self):
@@ -71,6 +76,7 @@ class MainWindow(QMainWindow):
         else:
             self._sorter.save(
                 project.userdata['primary_save_path'], set_last_file=True)
+        self._sorter.dirty_flag = False
         self.updateProject()
 
     # Should return save path

@@ -22,6 +22,7 @@ class GSorter(QObject):
         self.project : Project = project
         self.config = OmegaConf.load(CONFIG_PATH)
         self.init_item_timestamps()
+        self.dirty_flag : bool = False
 
     def init_item_timestamps(self):
         current_timestamp = time.time()
