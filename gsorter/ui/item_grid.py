@@ -68,7 +68,8 @@ class ItemGrid(QGroupBox):
         self.comparison = comparison
         self.radio_buttons = []
         for row, item in enumerate(comparison.data):
-            button = QRadioButton(str(row))
+            button = QRadioButton(str(row+1))
+            button.setShortcut('Shift+'+str(row+1))
             button.clicked.connect(self.updateSelectedIndex)
             self.radio_buttons.append(button)
             self.layout.addWidget(button, row+1, 0,
