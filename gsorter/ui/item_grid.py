@@ -1,12 +1,13 @@
 from PyQt5.QtWidgets import (QGroupBox, QGridLayout, QLineEdit, QVBoxLayout,
     QFrame, QLabel, QTextEdit, QWidget, QRadioButton)
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, pyqtSignal
 import gsorter as gs
 import time
 class ItemGridField(QWidget):
-    def __init__(self, item, field_id, field_spec):
+    def __init__(self, parent, item, field_id, field_spec):
         super().__init__()
         layout = QVBoxLayout(self)
+        self._parent = parent
         self.item = item
         self.field_id = field_id
         self.field_spec = field_spec
@@ -26,8 +27,12 @@ class ItemGridField(QWidget):
     def textChangedCallback(self):
         self.item.data[self.field_id] = self.gettext()
         self.item.modification_timestamps[self.field_id] = time.time()
+        self._parent.change_made.emit(1)
 
 class ItemGrid(QGroupBox):
+    # Change made w/ score
+    change_made = pyqtSignal(int)
+
     def __init__(self, 
         sorter,
         fields : list[gs.FieldSpec]):
@@ -55,6 +60,7 @@ class ItemGrid(QGroupBox):
             if button.isChecked():
                 self.comparison.selected_item = i
                 self.comparison.modification_timestamp = time.time()
+                self.change_made.emit(100)
 
     def setComparison(self, comparison : gs.Comparison):
         self.clearLayout()
@@ -80,7 +86,7 @@ class ItemGrid(QGroupBox):
     def addField(self, row, col, field_id, item):
         field_spec : gs.FieldSpec = self._fields[field_id]
         self.layout.addWidget(
-            ItemGridField(item, field_id, field_spec), row, col,
+            ItemGridField(self, item, field_id, field_spec), row, col,
             Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignLeft)
 
     def clearLayout(self):

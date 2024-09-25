@@ -1,1 +1,4 @@
 last_file: D:/Code/gsorter/new_horsewords_project.json
+backup_threshold: 800
+make_backups: true
+backup_dir: backups

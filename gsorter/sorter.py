@@ -46,6 +46,15 @@ class GSorter(QObject):
         if set_last_file:
             self.config['last_file'] = file_path
 
+    def make_backup(self):
+        if not os.path.exists(self.config['backup_dir']):
+            os.makedirs(self.config['backup_dir'])
+        file_path = os.path.join(self.config['backup_dir'],
+            self.project.name + str(int(time.time())) + '.json')
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(self.project.model_dump_json())
+            self.status.emit(f"Saved backup to {file_path}")
+
     def load(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             json_data = f.read()

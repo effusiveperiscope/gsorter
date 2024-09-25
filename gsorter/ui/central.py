@@ -13,6 +13,7 @@ class CentralWidget(QFrame):
 
         project = sorter.project
         fields = sorter.fields
+        self.actions_count = 0
 
         ext_layout = QVBoxLayout(self)
 
@@ -21,6 +22,8 @@ class CentralWidget(QFrame):
         layout = QHBoxLayout(internal_frame)
         item_grid = ItemGrid(sorter, fields)
         layout.addWidget(item_grid)
+        
+        item_grid.change_made.connect(self.countAction)
 
         rl_box = QGroupBox("Comparisons")
         rl_layout = QHBoxLayout(rl_box)
@@ -39,6 +42,15 @@ class CentralWidget(QFrame):
         ext_layout.addWidget(self.status_bar)
         self.status_bar.showMessage("Status")
         sorter.status.connect(self.statusCb)
+
+        self._sorter = sorter
+
+    def countAction(self, score : int):
+        self.actions_count += score
+        cfg = self._sorter.config
+        if cfg['make_backups'] and (self.actions_count > cfg['backup_threshold']):
+            self._sorter.make_backup()
+            self.actions_count = 0
 
     def statusCb(self, msg : str):
         current_time = datetime.now().strftime("%Y/%m/%d %H:%M:%S")
