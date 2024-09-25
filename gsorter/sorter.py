@@ -7,6 +7,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 from omegaconf import OmegaConf
 import sys
 import time
+import os
 
 CONFIG_PATH = 'conf.yaml'
 class GSorter(QObject):
@@ -60,8 +61,11 @@ class GSorter(QObject):
         app = QApplication(sys.argv)
         window = MainWindow(self)
         window.show()
-        if self.config.get('last_file'):
+        if self.config.get('last_file') and os.path.exists(
+            self.config['last_file']):
             self.load(self.config['last_file'])
+        else:
+            self.loaded_project.emit()
         ret = app.exec_()
         self.cleanup()
         return ret
