@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QAction, QFileDialog, QMessageBox
+from PyQt5.QtWidgets import (QMainWindow, QAction, QFileDialog, QMessageBox)
 from PyQt5.QtGui import QIcon
 from gsorter.ui.central import CentralWidget
 class MainWindow(QMainWindow):

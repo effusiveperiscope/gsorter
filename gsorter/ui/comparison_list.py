@@ -9,10 +9,13 @@ class ComparisonList(QListWidget):
         self._sorter = sorter
         self.set_comparison_cb = set_comparison_cb
 
-        self.currentItemChanged.connect(lambda item:
-            self.set_comparison_cb(
-                item.data(ComparisonList.ComparisonRole)))
+        self.currentItemChanged.connect(self.updateGroupItem)
         self.currentRowChanged.connect(self.updateGroup)
+
+    def updateGroupItem(self, item : gs.Item | None):
+        if item is not None:
+            self.set_comparison_cb(
+                item.data(ComparisonList.ComparisonRole))
 
     def updateGroup(self, row : int):
         if self._group is not None:

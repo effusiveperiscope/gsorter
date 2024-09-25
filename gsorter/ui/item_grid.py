@@ -40,7 +40,7 @@ class ItemGrid(QGroupBox):
         self.column_mapping = {field_id : i for i, field_id in 
             enumerate(self._fields.keys())}
         self.refreshHeaders()
-        self.setMinimumWidth(800)
+        self.setMinimumWidth(1000)
         self.setMinimumHeight(600)
 
     def refreshHeaders(self):

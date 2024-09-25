@@ -11,6 +11,7 @@ import time
 CONFIG_PATH = 'conf.yaml'
 class GSorter(QObject):
     loaded_project = pyqtSignal()
+    status = pyqtSignal(str)
 
     def __init__(self,
     project : Project,
@@ -35,12 +36,14 @@ class GSorter(QObject):
     def save(self, file_path, set_last_file=False):
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(self.project.model_dump_json())
+            self.status.emit(f"Saved to {file_path}")
         if set_last_file:
             self.config['last_file'] = file_path
 
     def load(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             json_data = f.read()
+            self.status.emit(f"Loaded from {file_path}")
         self.config['last_file'] = file_path
         self.project = Project.model_validate_json(json_data)
         self.loaded_project.emit()
