@@ -31,11 +31,11 @@ nameable groups, the data for which will be saved and exported together.
 Fields are 'rules' that tell the sorter how to display values from an item's data dictionary; without a defined Field, no data from an associated item key will be displayed.
 
 ## Timestamping
-GSorter uses `ntplib` to obtain timestamps. These timestamps are not intended to
+GSorter uses standard python time/datetime utilities to obtain timestamps. These timestamps are not intended to
 be exhaustively accurate or as robust as a true CRDT (since NTP allows for some
 variation), but should be
  "precise" enough to account for merges between
-project files where different groups were handled by different annotators.
+project files where different groups were handled by different annotators (as long as their system clocks were reasonably set).
 
 # Interface
 - I want to bcomparisonse through groups through a hierarchical interface, opening up
