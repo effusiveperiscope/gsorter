@@ -36,3 +36,12 @@ be exhaustively accurate or as robust as a true CRDT (since NTP allows for some
 variation), but should be
  "precise" enough to account for merges between
 project files where different groups were handled by different annotators (as long as their system clocks were reasonably set).
+
+# Idealized workflow
+See `horsewords.py` for code.
+1. Define a file function that intakes a filepath and produces a list of Items with comparison IDs.
+2. Use `Grouper`s to create groups from the file function and a list of file paths.
+3. Define data fields.
+4. Create a Project from groups from step 2.
+5. Define an output processor.
+6. Instantiate GSorter and run the UI for sorting.
