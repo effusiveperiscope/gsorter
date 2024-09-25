@@ -69,7 +69,8 @@ class MainWindow(QMainWindow):
         if not 'primary_save_path' in project.userdata:
             file_path = self.saveAsFn(primary_prompt=True)
         else:
-            self._sorter.save(project.userdata['primary_save_path'])
+            self._sorter.save(
+                project.userdata['primary_save_path'], set_last_file=True)
         self.updateProject()
 
     # Should return save path
@@ -81,10 +82,12 @@ class MainWindow(QMainWindow):
             project.userdata.get('primary_save_path', project.name+'.json'), 
             "JSON Files (*.json);;All Files (*)",
             options=options)
-        if primary_prompt and self.promptPrimarySave(file_path):
-            project.userdata['primary_save_path'] = file_path
         if len(file_path):
-            self._sorter.save(file_path=file_path)
+            if primary_prompt and self.promptPrimarySave(file_path):
+                project.userdata['primary_save_path'] = file_path
+                self._sorter.save(file_path=file_path, set_last_file=True)
+            else:
+                self._sorter.save(file_path=file_path)
         return file_path
 
     def openFn(self):

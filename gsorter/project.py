@@ -9,7 +9,3 @@ class Project(BaseModel):
     name : str = ''
     groups : list[Group] = Field(default_factory=lambda:[])
     userdata : dict = Field(default_factory=lambda: {})
-
-    def load_from_path(file_path):
-        with open(file_path, encoding='utf-8') as f:
-            self.model_validate_json(f.read())

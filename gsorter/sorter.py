@@ -4,9 +4,11 @@ from gsorter.ui.window import MainWindow
 from gsorter.item import Item
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import pyqtSignal, QObject
+from omegaconf import OmegaConf
 import sys
 import time
 
+CONFIG_PATH = 'conf.yaml'
 class GSorter(QObject):
     loaded_project = pyqtSignal()
 
@@ -16,6 +18,7 @@ class GSorter(QObject):
         super().__init__()
         self.fields = fields
         self.project : Project = project
+        self.config = OmegaConf.load(CONFIG_PATH)
         self.init_item_timestamps()
 
     def init_item_timestamps(self):
@@ -29,18 +32,28 @@ class GSorter(QObject):
         for g in self.project.groups:
             g.on_leaf_items(init_item_timestamp)
 
-    def save(self, file_path):
+    def save(self, file_path, set_last_file=False):
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(self.project.model_dump_json())
+        if set_last_file:
+            self.config['last_file'] = file_path
 
     def load(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as f:
             json_data = f.read()
+        self.config['last_file'] = file_path
         self.project = Project.model_validate_json(json_data)
         self.loaded_project.emit()
+
+    def cleanup(self):
+        OmegaConf.save(self.config, f=CONFIG_PATH)
 
     def ui_run(self):
         app = QApplication(sys.argv)
         window = MainWindow(self)
         window.show()
-        return app.exec_()
+        if self.config.get('last_file'):
+            self.load(self.config['last_file'])
+        ret = app.exec_()
+        self.cleanup()
+        return ret
