@@ -16,11 +16,13 @@ class CentralWidget(QFrame):
 
         rl_box = QGroupBox("Comparisons")
         rl_layout = QHBoxLayout(rl_box)
-        self.rl = ComparisonList(item_grid.setComparison)
+        self.rl = ComparisonList(self, item_grid.setComparison)
         rl_layout.addWidget(self.rl)
         layout.addWidget(rl_box)
 
         gt_box = QGroupBox("Editing groups")
         gt_layout = QHBoxLayout(gt_box)
-        gt_layout.addWidget(GroupTree(project, self.rl.setGroup))
+        gt = GroupTree(sorter, self.rl.setGroup)
+        gt_layout.addWidget(gt)
+        sorter.loaded_project.connect(gt.loadProject)
         layout.addWidget(gt_box)

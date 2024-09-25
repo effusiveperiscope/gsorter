@@ -3,15 +3,20 @@ from PyQt5.QtCore import Qt
 import gsorter as gs
 class ComparisonList(QListWidget):
     ComparisonRole = Qt.UserRole + 2
-    def __init__(self, set_comparison_cb):
+    def __init__(self, sorter, set_comparison_cb):
         super().__init__()
         self._group = None
+        self._sorter = sorter
         self.set_comparison_cb = set_comparison_cb
 
-        #self.currentItemChanged.connect(lambda item: print(item))
         self.currentItemChanged.connect(lambda item:
             self.set_comparison_cb(
                 item.data(ComparisonList.ComparisonRole)))
+        self.currentRowChanged.connect(self.updateGroup)
+
+    def updateGroup(self, row : int):
+        if self._group is not None:
+            self._group.current_comparison = row
         
     def setGroup(self, group : gs.Group):
         self.clear()
@@ -23,3 +28,6 @@ class ComparisonList(QListWidget):
             item.setText(comparison_id)
             item.setData(ComparisonList.ComparisonRole, comparison)
             self.addItem(item)
+
+        if self._group.current_comparison is not None:
+            self.setCurrentRow(self._group.current_comparison)

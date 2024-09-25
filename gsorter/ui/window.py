@@ -67,16 +67,13 @@ class MainWindow(QMainWindow):
     def saveFn(self):
         project = self._sorter.project
         if not 'primary_save_path' in project.userdata:
-            file_path = self.saveAsFn()
-            if len(file_path):
-                if self.promptPrimarySave(file_path):
-                    project.userdata['primary_save_path'] = file_path
+            file_path = self.saveAsFn(primary_prompt=True)
         else:
             self._sorter.save(project.userdata['primary_save_path'])
         self.updateProject()
 
     # Should return save path
-    def saveAsFn(self):
+    def saveAsFn(self, primary_prompt=False):
         project = self._sorter.project
         options = QFileDialog.Options()
         file_path, _ = QFileDialog.getSaveFileName(
@@ -84,6 +81,8 @@ class MainWindow(QMainWindow):
             project.userdata.get('primary_save_path', project.name+'.json'), 
             "JSON Files (*.json);;All Files (*)",
             options=options)
+        if primary_prompt and self.promptPrimarySave(file_path):
+            project.userdata['primary_save_path'] = file_path
         if len(file_path):
             self._sorter.save(file_path=file_path)
         return file_path
