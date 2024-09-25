@@ -21,10 +21,10 @@ class GSorter(QObject):
         self.fields = fields
         self.project : Project = project
         self.config = OmegaConf.load(CONFIG_PATH)
-        self.init_item_timestamps()
+        self._init_item_timestamps()
         self.dirty_flag : bool = False
 
-    def init_item_timestamps(self):
+    def _init_item_timestamps(self):
         current_timestamp = time.time()
         def init_item_timestamp(item: Item):
             for field_id in self.fields.keys():
