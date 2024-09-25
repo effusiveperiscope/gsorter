@@ -107,3 +107,14 @@ class MainWindow(QMainWindow):
             self._sorter.load(file_path)
             self.updateProject()
         
+    def closeEvent(self, event):
+        if self._sorter.dirty_flag:
+            reply = QMessageBox.question(self,
+                "Quit application",
+                "There are unsaved changes. Are you sure you want to quit?",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No)
+            if reply == QMessageBox.StandardButton.Yes:
+                event.accept()
+            else:
+                event.ignore()
