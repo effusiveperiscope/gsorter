@@ -4,6 +4,7 @@ from gsorter.ui.window import MainWindow
 from gsorter.item import Item
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import pyqtSignal, QObject
+from typing import Callable
 from omegaconf import OmegaConf
 import sys
 import time
@@ -16,13 +17,15 @@ class GSorter(QObject):
 
     def __init__(self,
     project : Project,
-    fields : dict[str, FieldSpec]):
+    fields : dict[str, FieldSpec],
+    output_processors : dict[str, Callable[[Project],None]]):
         super().__init__()
         self.fields = fields
         self.project : Project = project
         self.config = OmegaConf.load(CONFIG_PATH)
         self._init_item_timestamps()
         self.dirty_flag : bool = False
+        self.output_processors = output_processors
 
     def _init_item_timestamps(self):
         current_timestamp = time.time()

@@ -31,6 +31,17 @@ class MainWindow(QMainWindow):
         self.open_action.triggered.connect(self.openFn)
         file_menu.addAction(self.open_action)
 
+        processors_menu = menu_bar.addMenu(QIcon(), 'Output Processors')
+        self.processor_actions = []
+        for name, processor in self._sorter.output_processors.items():
+            action = QAction(QIcon(), name)
+            action.triggered.connect(
+                lambda b: processor(self._sorter.project)
+            )
+            processors_menu.addAction(action)
+            # need to maintain ref to use in menu bar
+            self.processor_actions.append(action)
+
     def updateTitle(self):
         project = self._sorter.project
         if len(project.name):

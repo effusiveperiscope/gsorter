@@ -97,11 +97,29 @@ def horsemain():
 
     # Step 4. Create a Project from your groups
     project = gs.Project(groups=[group], name='new_horsewords_project')
-    #print(project.model_dump_json())
 
-    # Step 5. ???
+    # Step 5. Define an output processor
+    def output_processor(project : gs.Project):
+        output_dict = {}
+        def cfn(comparison : gs.Comparison):
+            item = comparison.data[comparison.selected_item]
+            baseword = comparison.comparison_id
+            transcription = item.data['transcription']
+            output_dict[baseword] = transcription
+
+        def gfn(group : gs.Group):
+            group.on_leaf_comparisons(cfn)
+
+        for group in project.groups:
+            group.on_leaf_groups(gfn)
+
+        with open('new_horsewords.clean', 'w', encoding='utf-8') as f:
+            for baseword, transcription in output_dict.items():
+                f.write(f'{baseword.upper()}  {transcription}\n')
+
     # Step 6. Profit!
-    sorter = gs.GSorter(project, fields=fields)
+    sorter = gs.GSorter(project, fields=fields,
+        output_processors={'horsewords': output_processor})
     sorter.ui_run()
 
 if __name__ == '__main__':
