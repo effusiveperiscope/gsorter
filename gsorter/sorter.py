@@ -25,10 +25,14 @@ class GSorter:
         for g in self.project.groups:
             g.on_leaf_items(init_item_timestamp)
 
-    # TODO - UI end needs to account for things like default file path, backups
     def save(self, file_path):
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(self.project.model_dump_json())
+
+    def load(self, file_path):
+        with open(file_path, 'r', encoding='utf-8') as f:
+            json_data = f.read()
+        self.project = Project.model_validate_json(json_data)
 
     def ui_run(self):
         app = QApplication(sys.argv)

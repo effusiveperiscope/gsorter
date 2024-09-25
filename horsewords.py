@@ -96,7 +96,7 @@ def horsemain():
     }
 
     # Step 4. Create a Project from your groups
-    project = gs.Project(groups=[group], name='horsewords_project')
+    project = gs.Project(groups=[group], name='new_horsewords_project')
     #print(project.model_dump_json())
 
     # Step 5. ???

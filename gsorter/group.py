@@ -11,7 +11,7 @@ class Group(BaseModel):
     groups: list['Group'] = Field(default_factory=lambda:[])
     comparisons: dict[str, Comparison] = Field(default_factory=lambda:{})
     is_current_group: bool = False
-    current_comparison: int = None
+    current_comparison: int | None = None
 
     # utility functions for tree operations
     def on_leaf_groups(self, op, **kwargs):
