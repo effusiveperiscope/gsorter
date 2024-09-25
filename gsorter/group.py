@@ -29,6 +29,13 @@ class Group(BaseModel):
     def on_leaf_items(self, op, **kwargs):
         self.on_leaf_groups(lambda g: g.on_items(op, **kwargs), **kwargs)
 
+    def on_comparisons(self, op, **kwargs):
+        for comparison in self.comparisons.values():
+            op(comparison, **kwargs)
+
+    def on_leaf_comparisons(self, op, **kwargs):
+        self.on_leaf_groups(lambda g: g.on_comparisons(op, **kwargs), **kwargs)
+
 class Grouper(ABC):
     def __init__(self, **kwargs):
         pass

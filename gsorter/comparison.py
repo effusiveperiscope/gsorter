@@ -4,3 +4,4 @@ class Comparison(BaseModel):
     comparison_id: str = ''
     data: list[Item] = Field(default_factory=lambda:[])
     selected_item: int = 0
+    modification_timestamp: float = 0.0

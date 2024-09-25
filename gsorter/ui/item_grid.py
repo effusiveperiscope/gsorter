@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import (QGroupBox, QGridLayout, QLineEdit, QVBoxLayout,
     QFrame, QLabel, QTextEdit, QWidget, QRadioButton)
 from PyQt5.QtCore import Qt, QSize
 import gsorter as gs
+import time
 class ItemGridField(QWidget):
     def __init__(self, item, field_id, field_spec):
         super().__init__()
@@ -24,6 +25,7 @@ class ItemGridField(QWidget):
     
     def textChangedCallback(self):
         self.item.data[self.field_id] = self.gettext()
+        self.item.modification_timestamps[self.field_id] = time.time()
 
 class ItemGrid(QGroupBox):
     def __init__(self, 
@@ -52,6 +54,7 @@ class ItemGrid(QGroupBox):
         for i, button in enumerate(self.radio_buttons):
             if button.isChecked():
                 self.comparison.selected_item = i
+                self.comparison.modification_timestamp = time.time()
 
     def setComparison(self, comparison : gs.Comparison):
         self.clearLayout()

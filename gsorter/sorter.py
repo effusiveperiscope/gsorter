@@ -30,8 +30,13 @@ class GSorter(QObject):
                     continue
                 # Change empty to current timestamp
                 item.modification_timestamps[field_id] = current_timestamp
+        
+        def init_comparison_timestamp(comparison):
+            comparison.modification_timestamp = current_timestamp
+
         for g in self.project.groups:
             g.on_leaf_items(init_item_timestamp)
+            g.on_leaf_comparisons(init_comparison_timestamp)
 
     def save(self, file_path, set_last_file=False):
         with open(file_path, 'w', encoding='utf-8') as f:
